@@ -2,3 +2,6 @@ dima.txt
 output/
 .idea/
 .venv/
+report_*.docx
+.env
+input.txt

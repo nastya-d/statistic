@@ -46,6 +46,7 @@ plt.ylabel('частоты')
 plt.title('Полигон частот')
 plt.savefig('output/Полигон частот.png')
 if SHOW_GRAPHS: plt.show()
+plt.clf()
 
 # полигон относительных частот
 plt.plot(middle_row, relative_frequencies)
@@ -54,6 +55,7 @@ plt.ylabel('относительные частоты')
 plt.title('Полигон относительных частот')
 plt.savefig('output/Полигон относительных частот.png')
 if SHOW_GRAPHS: plt.show()
+plt.clf()
 
 # гистограмма относительных частот
 plt.bar(middle_row, frequency_density, width=0.3, edgecolor = 'black')
@@ -62,6 +64,7 @@ plt.xlabel('частичные интервалы')
 plt.ylabel('плотность частоты')
 plt.savefig('output/Гистограмма относительных частот.png')
 if SHOW_GRAPHS: plt.show()
+plt.clf()
 
 # эмпирическая функция распределения
 plt.plot(middle_row, empirical_distribution_function)
@@ -70,6 +73,7 @@ plt.ylabel('эмпирическая функция распределения')
 plt.title('Эмпирическая функция распределения')
 plt.savefig('output/Эмпирическая функция распределения.png')
 if SHOW_GRAPHS: plt.show()
+plt.clf()
 
 # точечные оценки числовых характеристик
 M = math_o(middle_row, relative_frequencies) # выборочное среднее
