@@ -36,7 +36,7 @@ def emp_distr_f(rel_fr):
 
 def print_all_table_1(f1, f2, f3, f4, f5, f6):
     df = pd.DataFrame({
-        '№': (i for i in range(1,8)),
+        '№': (i + 1 for i in range(len(f1))),
         'Интервал': f1,
         'Середина': f2,
         'Частота': f3,
@@ -53,7 +53,7 @@ def print_all_table_1(f1, f2, f3, f4, f5, f6):
 
 def print_all_table_2(f1, f2, f3, f4, f5, f6, f7):
     df = pd.DataFrame({
-        '№': (i for i in range(1,6)),
+        '№': (i + 1 for i in range(len(f1))),
         'Интервал': f1,
         'Частота': f2,
         'Стандартизация': f3,
