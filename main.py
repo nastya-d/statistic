@@ -1,7 +1,8 @@
-from main_meanings import read_data
+from main_meanings import read_data, reliability, significance
 from functions import *
 from math import log10
 import matplotlib.pyplot as plt
+from scipy.stats import norm, t
 
 import os
 from sys import argv
@@ -36,7 +37,7 @@ print('Статистический интервальный ряд распре
 print(f'Объём выборки: {n}')
 print(f'Минимальное значение: {x_min}; Максимальное значение: {x_max}')
 print(f'Размах выборки: {R};        Шаг: {h}')
-print_all_table(interval_row, middle_row, frequencies_row, relative_frequencies, empirical_distribution_function, frequency_density)
+print_all_table_1(interval_row, middle_row, frequencies_row, relative_frequencies, empirical_distribution_function, frequency_density)
 
 # графики
 # полигон частот
@@ -92,3 +93,25 @@ print(f'Исправленная выборочная дисперсия: {corre
 print(f'Исправленное выборочное СКО: {corrected_SKO}')
 print(f'Выборочная медиана: {median}')
 print(f'Выборочная мода: {moda}')
+
+# интервальные оценки числовых характеристик
+reliability = float(reliability) # надёжность
+significance = float(significance) # значимость
+# квантили
+t_b = norm.ppf(1 - significance/2)
+t_ma = t.ppf(1 - significance/2, n-1)
+# величины доверительного интервала
+e1 = t_b * (SKO / (n**0.5))
+e2 = t_ma * (corrected_SKO / (n**0.5))
+
+print('\nИнтервальные оценки числовых характеристик')
+print(f'Доверительная вероятность: {reliability}')
+print(f'Величина доверительного интервала: {e1}')
+print(f'Доверительный интервал (дисперсия известна): ({round(M - e1, 4)}; {round(M + e1, 4)})')
+print(f'Уровень значимости: {significance}')
+print(f'Величина доверительного интервала: {e2}')
+print(f'Доверительный интервал (дисперсия неизвестна): ({round(M - e2, 4)}; {round(M + e2, 4)})')
+
+# проверка критериев
+pearson_criterion(interval_row, M, corrected_SKO, n, frequencies_row, statistical_row, significance)
+
