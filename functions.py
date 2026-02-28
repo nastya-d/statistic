@@ -1,5 +1,5 @@
 import pandas as pd
-from scipy.stats import norm, chi2
+from scipy.stats import norm, chi2, kstwobign
 
 
 def borders(h, x_min, x_max):
@@ -34,6 +34,13 @@ def emp_distr_f(rel_fr):
     return row
 
 
+def teor_distr_f(x, m, sko):
+    t_d_f = []
+    for i in range(len(x)):
+        t_d_f.append(norm.cdf(x[i], m, sko))
+    return t_d_f
+
+
 def print_all_table_1(f1, f2, f3, f4, f5, f6):
     df = pd.DataFrame({
         '№': (i + 1 for i in range(len(f1))),
@@ -63,6 +70,25 @@ def print_all_table_2(f1, f2, f3, f4, f5, f6, f7):
         'Хи-квадрат': f7,
     })
     df.to_excel("output/table_2.xlsx", index=False)
+
+    pd.set_option('display.expand_frame_repr', False)
+    pd.set_option('display.width', 1000)
+    pd.set_option('display.colheader_justify', 'center')
+    print(df.to_string(index=False, justify='center'))
+
+
+def print_all_table_3(f1, f2, f3, f4, f5, f6, f7):
+    df = pd.DataFrame({
+        '№': (i + 1 for i in range(len(f1))),
+        'Середина': f1,
+        'Частота': f2,
+        'Отн. частота': f3,
+        'Эмпр. ф. р.': f4,
+        'Стандартизация': f5,
+        'Теорет. ф. р.': f6,
+        'Дельта': f7,
+    })
+    df.to_excel("output/table_3.xlsx", index=False)
 
     pd.set_option('display.expand_frame_repr', False)
     pd.set_option('display.width', 1000)
@@ -134,7 +160,7 @@ def pearson_criterion(int_row, m, correct_sko, n, f_row, st_row, s):
     krit_xixi = chi2.ppf(1 - s, k)
 
     print('\nПроверка критерия Пирсона')
-    print('Проверка статистической гипотезы с помощью критерия Пирсона ')
+    print('Проверка статистической гипотезы с помощью критерия Пирсона')
     # print(len(int_row), len(f_row), len(standardization_row), len(fu_row), len(theoretical_probabilities_of_intervals), len(theoretical_frequencies_row), len(xixi))
     print_all_table_2(int_row, f_row, standardization_row, fu_row, theoretical_probabilities_of_intervals, theoretical_frequencies_row, xixi)
     print('Основная гипотеза H0: распределение является нормальным')
@@ -144,9 +170,38 @@ def pearson_criterion(int_row, m, correct_sko, n, f_row, st_row, s):
     print(f'Критическое значение (квантиль): {round(krit_xixi, 4)}')
 
     if sum(xixi) < krit_xixi:
-        print('Гипотеза не отвергается')
+        print('Гипотеза принимается')
     else:
         print('Гипотеза отвергается')
+
+
+def delta(f_emp, f_t):
+    delta = []
+    for i in range(len(f_emp)):
+        delta.append(abs(f_emp[i] - f_t[i]))
+    return delta
+
+def kolmogorov_criterion(mid_row, f_row, rel_row, e_d_f, m, correct_sko, n, s):
+    standardization_row = [(x - m) / correct_sko for x in mid_row]  # стандартизация
+    f_t_row = [float(norm.cdf(x)) for x in standardization_row] # функция лапласа
+    delt = delta(e_d_f, f_t_row)
+    max_delta = max(delt)
+    l = n**0.5 * max_delta
+    krit_l = kstwobign.ppf(1 - s)
+
+    print('\nПроверка критерия Колмогорова')
+    print('Проверка статистической гипотезы с помощью критерия Колмогорова')
+    print_all_table_3(mid_row, f_row, rel_row, e_d_f, standardization_row, f_t_row, delt)
+    print('Основная гипотеза H0: распределение является нормальным')
+    print(f'Максимальное отклонение: {round(max_delta, 4)}')
+    print(f'Значение статистики критерия: {round(l, 4)}')
+    print(f'Уровень значимости: {s}')
+    print(f'Критическое значение (квантиль): {round(krit_l, 4)}')
+
+    if l < krit_l:
+        print("Гипотеза принимается")
+    else:
+        print("Гипотеза отвергается")
 
 
 if __name__ == '__main__':

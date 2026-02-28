@@ -30,6 +30,7 @@ middle_row = [round((i[0]+i[1])/2, 3) for i in interval_row] # середины 
 frequencies_row = frequencies(interval_row, statistical_row) # частоты интервалов
 relative_frequencies = [i/n for i in frequencies_row] # относительные частоты интервалов
 empirical_distribution_function = emp_distr_f(relative_frequencies) # эмпирическая функция распределения
+theoretical_distribution_function = teor_distr_f(middle_row, math_o(middle_row, relative_frequencies), disp(middle_row, relative_frequencies)**0.5)
 frequency_density = [round(i/h, 2) for i in relative_frequencies] # плотность частоты
 
 # вывод таблицы 1
@@ -76,6 +77,15 @@ plt.savefig('output/Эмпирическая функция распределе
 if SHOW_GRAPHS: plt.show()
 plt.clf()
 
+# теоретическая функция распределения
+plt.plot(middle_row, theoretical_distribution_function)
+plt.xlabel('частичные интервалы')
+plt.ylabel('теоретическая функция распределения')
+plt.title('Теоретическая функция распределения')
+plt.savefig('output/Теоретическая функция распределения.png')
+if SHOW_GRAPHS: plt.show()
+plt.clf()
+
 # точечные оценки числовых характеристик
 M = math_o(middle_row, relative_frequencies) # выборочное среднее
 D = disp(middle_row, relative_frequencies) # выборочная дисперсия
@@ -106,12 +116,12 @@ e2 = t_ma * (corrected_SKO / (n**0.5))
 
 print('\nИнтервальные оценки числовых характеристик')
 print(f'Доверительная вероятность: {reliability}')
-print(f'Величина доверительного интервала: {e1}')
+print(f'Величина доверительного интервала: {round(e1, 4)}')
 print(f'Доверительный интервал (дисперсия известна): ({round(M - e1, 4)}; {round(M + e1, 4)})')
 print(f'Уровень значимости: {significance}')
-print(f'Величина доверительного интервала: {e2}')
+print(f'Величина доверительного интервала: {round(e2, 4)}')
 print(f'Доверительный интервал (дисперсия неизвестна): ({round(M - e2, 4)}; {round(M + e2, 4)})')
 
 # проверка критериев
 pearson_criterion(interval_row, M, corrected_SKO, n, frequencies_row, statistical_row, significance)
-
+kolmogorov_criterion(middle_row, frequencies_row, relative_frequencies, empirical_distribution_function, M, corrected_SKO, n, significance)
