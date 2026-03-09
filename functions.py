@@ -15,13 +15,12 @@ def borders(h, x_min, x_max):
 
 def frequencies(int_row, stat_row):
     n_row = []
-    c = 0
-    for i in range(len(int_row)):
-        for j in stat_row:
-            if int_row[i][0] <= j and j <= int_row[i][1]:
-                c += 1
+    for i, (left, right) in enumerate(int_row):
+        if i == len(int_row) - 1:
+            c = sum(left <= x <= right for x in stat_row)
+        else:
+            c = sum(left <= x < right for x in stat_row)
         n_row.append(c)
-        c = 0
     return n_row
 
 
