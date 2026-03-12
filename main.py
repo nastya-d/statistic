@@ -10,7 +10,7 @@ SHOW_GRAPHS = (len(argv) > 1 and argv[1] == 'show-graphs')
 os.makedirs('output', exist_ok=True)
 
 # первичная обработка выборки
-statistical_row = sorted(read_data()) # статистический ряд
+statistical_row = sorted(read_data()) # выборка
 
 a = [(i, statistical_row.count(i)) for i in statistical_row]
 b= list(dict.fromkeys(a))
@@ -42,6 +42,8 @@ print_all_table_1(interval_row, middle_row, frequencies_row, relative_frequencie
 
 # графики
 # полигон частот
+# plt.style.use('grayscale')
+plt.grid(True)
 plt.plot(middle_row, frequencies_row)
 plt.xlabel('частичные интервалы')
 plt.ylabel('частоты')
@@ -51,6 +53,7 @@ if SHOW_GRAPHS: plt.show()
 plt.clf()
 
 # полигон относительных частот
+plt.grid(True)
 plt.plot(middle_row, relative_frequencies)
 plt.xlabel('частичные интервалы')
 plt.ylabel('относительные частоты')
@@ -60,6 +63,7 @@ if SHOW_GRAPHS: plt.show()
 plt.clf()
 
 # гистограмма относительных частот
+plt.grid(True)
 plt.bar(middle_row, frequency_density, width=0.3, edgecolor = 'black')
 plt.title('Гистограмма относительных частот')
 plt.xlabel('частичные интервалы')
@@ -69,22 +73,16 @@ if SHOW_GRAPHS: plt.show()
 plt.clf()
 
 # эмпирическая функция распределения
-plt.plot(middle_row, empirical_distribution_function)
+plt.grid(True)
+plt.plot(middle_row, empirical_distribution_function, 'g-o')
+plt.plot(middle_row, theoretical_distribution_function, 'b-')
 plt.xlabel('частичные интервалы')
-plt.ylabel('эмпирическая функция распределения')
-plt.title('Эмпирическая функция распределения')
-plt.savefig('output/Эмпирическая функция распределения.png')
+plt.ylabel('функции распределения')
+plt.title('Эмпирическая и теоретическая функции распределения')
+plt.savefig('output/Функции распределения.png')
 if SHOW_GRAPHS: plt.show()
 plt.clf()
 
-# теоретическая функция распределения
-plt.plot(middle_row, theoretical_distribution_function)
-plt.xlabel('частичные интервалы')
-plt.ylabel('теоретическая функция распределения')
-plt.title('Теоретическая функция распределения')
-plt.savefig('output/Теоретическая функция распределения.png')
-if SHOW_GRAPHS: plt.show()
-plt.clf()
 
 # точечные оценки числовых характеристик
 M = math_o(middle_row, relative_frequencies) # выборочное среднее
