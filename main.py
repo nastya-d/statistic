@@ -75,7 +75,7 @@ plt.clf()
 # эмпирическая функция распределения
 plt.grid(True)
 plt.plot(middle_row, empirical_distribution_function, 'g-o')
-plt.plot(middle_row, theoretical_distribution_function, 'b-')
+plt.plot(middle_row, theoretical_distribution_function, 'b--')
 plt.xlabel('частичные интервалы')
 plt.ylabel('функции распределения')
 plt.title('Эмпирическая и теоретическая функции распределения')
